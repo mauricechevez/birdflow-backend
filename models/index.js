@@ -22,9 +22,11 @@ db.on('error', (error) => {
 // Import all of your models
 const User = require('./User');
 const State = require('./State');
+const Bird = require('./Bird');
 
 // export all the models from this file
 module.exports = {
     User,
-    State
+    State,
+    Bird
 }
