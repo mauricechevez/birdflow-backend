@@ -9,6 +9,7 @@ const JWT_SECRET = process.env.JWT_SECRET;
 
 // Models
 const { State } = require('../models');
+const { Bird } = require('../models');
 
 // Controllers
 const index = async (req, res) => {
@@ -32,6 +33,25 @@ const showStates = async (req, res) => {
     }
 }
 
+const showStateBirds = async (req, res) => {
+    const stateId = req.params.stateid
+    try {
+        const stateBirds = await State.findOne({ code: stateId });
+        if (stateBirds){
+            const birds = await Bird.find({speciesCode: {$in:stateBirds.birds}})
+            // console.log(birds)
+            res.json({
+                birds
+            })
+        }else {
+            res.json({message: 'NO STATE BIRDS'})
+        }
+        
+    } catch (error) {
+        console.log(error)
+    }
+}
+
 const create = async (req, res) => {
 
 }
@@ -45,12 +65,17 @@ const deleteBook = async (req, res) => {
 }
 
 
-// GET api/books/ (Public)
+// GET api/states/ (Public)
 router.get('/', (req, res) => {
     res.json({ msg: 'State endpoint OK!'});
 });
-// GET api/books/states
+
+// GET api/states
 router.get('/states', showStates);
+
+// GET api/states/:id
+router.get('/states/:stateid', showStateBirds);
+
 // router.get('/books/:id', show);
 // router.post('/books', passport.authenticate('jwt', { session: false }), create);
 // router.put('/books/:id', passport.authenticate('jwt', { session: false }), update);
