@@ -8,6 +8,7 @@ const PORT = process.env.PORT || 8000;
 
 // API
 const users = require('./api/users');
+const search = require('./api/search');
 
 // Middleware
 app.use(cors());
@@ -26,6 +27,7 @@ app.get('/', (req, res) => {
 
 // Routes
 app.use('/api/users', users);
+app.use('/api/search', search);
 
 app.get('/*', (req, res) => {
     res.status(404).json({ message: 'Data not found' });
