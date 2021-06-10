@@ -18,6 +18,7 @@ const axios = require('axios');
 // });
 
 // Get all states for US
+const { State } = require('./models');
 // const config = {
 //   method: 'get',
 //   url: 'https://api.ebird.org/v2/ref/region/list/subnational1/US',
@@ -25,10 +26,9 @@ const axios = require('axios');
 //     'X-eBirdApiToken': 'fih16titjkth'
 //   }
 // };
-
 // axios(config)
 // .then(function (response) {
-//   console.log(JSON.stringify(response.data));
+//     State.insertMany(response.data)
 // })
 // .catch(function (error) {
 //   console.log(error);
@@ -36,22 +36,36 @@ const axios = require('axios');
 
 
 // Get all birds for a state
-// const config = {
-//   method: 'get',
-//   url: 'https://api.ebird.org/v2/product/spplist/US-AZ',
-//   headers: { 
-//     'X-eBirdApiToken': 'fih16titjkth'
-//   }
-// };
+const birdForState = async (code) => {const config = {
+      method: 'get',
+      url: `https://api.ebird.org/v2/product/spplist/${code}`,
+      headers: { 
+        'X-eBirdApiToken': 'fih16titjkth'
+      }
+    };
+    axios(config)
+    .then(function (response) {
+        console.log(`----Birds for ${code}`)
+        console.log(response.data);
+        State.updateOne({code}, {$push: {birds:response.data}})
+    })
+    .catch(function (error) {
+      console.log(error);
+    });
+}
+// birdForState('US-AL')
 
-// axios(config)
-// .then(function (response) {
-//   console.log(JSON.stringify(response.data));
-// })
-// .catch(function (error) {
-//   console.log(error);
-// });
+// Select all states from State model and update with birds
+const states = async () => {
+    console.log('--- INSIDE OF STATE ---');
+    const states = await State.find({});
+    states.forEach((state) => {
+        birdForState(state.code)
+    })
+}
+// states()
 
+State.find({}).then((res)=>console.log(res))
 
 
 // Get the taxonomy for a bird
