@@ -23,10 +23,12 @@ db.on('error', (error) => {
 const User = require('./User');
 const State = require('./State');
 const Bird = require('./Bird');
+const Journal = require('./Journal');
 
 // export all the models from this file
 module.exports = {
     User,
     State,
-    Bird
+    Bird,
+    Journal
 }

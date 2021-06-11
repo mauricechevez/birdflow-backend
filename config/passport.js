@@ -11,6 +11,7 @@ const options = {
 }
 
 const JWT_STRATEGY = new Strategy(options, async (jwtPayload, done) => {
+    // check for a user by the id
     try {
         console.log(jwtPayload)
         const user = await User.findById(jwtPayload.id)
@@ -19,12 +20,14 @@ const JWT_STRATEGY = new Strategy(options, async (jwtPayload, done) => {
         } else {
             return done(null, false)
         }
+        
     } catch (error) {
         console.log('Error inside passport config')
         console.log(error)
     }
 });
 
+// export a function that will use strategy
 module.exports = async (passport) => {
     passport.use(JWT_STRATEGY)
 }
