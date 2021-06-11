@@ -53,8 +53,7 @@ const showStateBirds = async (req, res) => {
 }
 
 const showBirds = async (req,res) => {
-    const bird = req.body.bird
-    console.log(bird)
+    bird = req.params.name
     if(bird){
         try {
             let birds = await Bird.find({ comName: {$regex: bird, $options: 'i'} })
@@ -92,7 +91,7 @@ router.get('/states', showStates);
 router.get('/states/:stateid', showStateBirds);
 
 // GET api/search/birds
-router.get('/birds', showBirds);
+router.get('/birds/:name', showBirds);
 // router.get('/books/:id', show);
 // router.post('/books', passport.authenticate('jwt', { session: false }), create);
 // router.put('/books/:id', passport.authenticate('jwt', { session: false }), update);
