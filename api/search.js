@@ -16,11 +16,11 @@ const index = async (req, res) => {
 
 }
 
+// Show all states
 const showStates = async (req, res) => {
     try {
         const states = await State.find({});
         if (states){
-            console.log(states)
             res.json({
                 states
             })
@@ -33,6 +33,8 @@ const showStates = async (req, res) => {
     }
 }
 
+
+// Show all birds for a state
 const showStateBirds = async (req, res) => {
     const stateId = req.params.stateid
     try {
@@ -51,6 +53,7 @@ const showStateBirds = async (req, res) => {
     }
 }
 
+// Show birds from a user search 
 const showBirds = async (req,res) => {
     bird = req.params.name;
 
@@ -67,6 +70,7 @@ const showBirds = async (req,res) => {
     
 }
 
+// Show birds in a state by user search
 const showBirdsByState = async (req, res) => {
     const bird = req.params.name
     const stateId = req.params.state
