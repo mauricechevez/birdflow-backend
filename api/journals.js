@@ -14,7 +14,8 @@ const { Journal } = require('../models');
 const index = async (req, res) => {
     console.log('inside of /api/journals');
     try {
-        const allJournals = await Journal.find({});
+        // Look for all journals owned by bird lover
+        const allJournals = await Journal.find({userId: req.user.id});
         res.json({ journal: allJournals });
     } catch (error) {
         console.log('Error inside of /api/journals');
@@ -25,9 +26,12 @@ const index = async (req, res) => {
 
 const show = async (req, res) => {
     const { id } = req.params;
+    const userId = req.user.id
+    console.log('-----show me user id-----')
+    console.log(req.user.id)
     try {
-        // look for journal based on id
-        const journal = await Journal.findById(id);
+        // look for journal based on journal id and user id
+        const journal = await Journal.find({$and: [{_id: id}, {userId}]});
         res.json({ journal });
     } catch (error) {
         console.log('Error inside of /api/journals/:id');
@@ -39,8 +43,10 @@ const show = async (req, res) => {
 
 const create = async (req, res) => {
     const { name, entries, location} = req.body;
+    const userId = req.user.id
     try {
-        const newJournal = await Journal.create({ name, entries, location });
+        // Create Journal user input and also the user ID
+        const newJournal = await Journal.create({ name, entries, location, userId });
         console.log('new journal created', newJournal);
         res.json({ journal: newJournal });
     } catch (error) {
@@ -52,12 +58,12 @@ const create = async (req, res) => {
 
 
 const update = async (req, res) => {
-    console.log(req.params.jid);
-    const jid = req.params.jid
+    const id = req.params.id;
+    const userId = req.user.id
     try {
-        const updatedJournal = await Journal.findOneAndUpdate({_id: jid}, { name: req.body.name, entries: req.body.entries, location: req.body.location });
+        const updatedJournal = await Journal.findOneAndUpdate({$and:[{_id: id}, {userId}]}, { name: req.body.name, entries: req.body.entries, location: req.body.location });
         console.log(updatedJournal); // { n: 1, nModified: 0, ok: 1 }
-        res.redirect(`/api/journals/${jid}`);
+        res.redirect(`/api/journals/${id}`);
     } catch (error) {
         console.log('Error inside of UPDATE route');
         console.log(error);
@@ -67,8 +73,9 @@ const update = async (req, res) => {
 
 const deleteJournal = async (req, res) => {
     const { id } = req.params;
+    const userId = req.user.id
     try {
-        const result = await Journal.findByIdAndDelete(id);
+        const result = await Journal.deleteOne({$and:[{_id: id}, {userId}]});
         console.log(result);
         res.redirect('/api/journals');
 
@@ -92,7 +99,7 @@ router.get('/:id', passport.authenticate('jwt', { session: false }), show);
 // POST -> /api/journals
 router.post('/', passport.authenticate('jwt', { session: false }), create);
 // PUT -> /api/journals
-router.put('/:jid', passport.authenticate('jwt', { session: false }), update);
+router.put('/:id', passport.authenticate('jwt', { session: false }), update);
 // DELETE -> /api/journals/:id
 router.delete('/:id', passport.authenticate('jwt', { session: false }), deleteJournal);
 
