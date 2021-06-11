@@ -8,6 +8,8 @@ const PORT = process.env.PORT || 8000;
 
 // API
 const users = require('./api/users');
+const birds = require('./api/books');
+const journals = require('./api/journals');
 
 // Middleware
 app.use(cors());
@@ -26,6 +28,8 @@ app.get('/', (req, res) => {
 
 // Routes
 app.use('/api/users', users);
+app.use('/api/birds', birds);
+app.use('/api/journals', journals);
 
 app.get('/*', (req, res) => {
     res.status(404).json({ message: 'Data not found' });
