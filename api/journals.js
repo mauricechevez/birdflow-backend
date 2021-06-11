@@ -36,18 +36,6 @@ const show = async (req, res) => {
     }
 }
 
-// const create = async (req, res) => {
-//     const { sciName, comName} = req.body;
-//     try {
-//         const newBird = await Journal.create({ sciName, comName });
-//         console.log('new bird added', newBird);
-//         res.json({ bird: newBird });
-//     } catch (error) {
-//        console.log('Error inside of POST of /api/journals');
-//        console.log(error);
-//        return res.status(400).json({ message: 'Bird was not created. Please try again...' }); 
-//     }
-// }
 
 const create = async (req, res) => {
     const { name, entries, location} = req.body;
@@ -62,17 +50,14 @@ const create = async (req, res) => {
     }
 }
 
+
 const update = async (req, res) => {
-    console.log(req.body);
+    console.log(req.params.jid);
+    const jid = req.params.jid
     try {
-        const updatedJournal = await Bird.update({ title: req.body.title }, req.body);
-        const journal = await Bird.findOne({ title: req.body.title });
-
+        const updatedJournal = await Journal.findOneAndUpdate({_id: jid}, { name: req.body.name });
         console.log(updatedJournal); // { n: 1, nModified: 0, ok: 1 }
-        console.log(journal); // a book object 
-
-        res.redirect(`/api/journals/${journal.id}`);
-
+        res.redirect(`/api/journals/${jid}`);
     } catch (error) {
         console.log('Error inside of UPDATE route');
         console.log(error);
@@ -107,7 +92,7 @@ router.get('/:id', passport.authenticate('jwt', { session: false }), show);
 // POST -> /api/journals
 router.post('/', passport.authenticate('jwt', { session: false }), create);
 // PUT -> /api/journals
-router.put('/', passport.authenticate('jwt', { session: false }), update);
+router.put('/:jid', passport.authenticate('jwt', { session: false }), update);
 // DELETE -> /api/journals/:id
 router.delete('/:id', passport.authenticate('jwt', { session: false }), deleteJournal);
 
