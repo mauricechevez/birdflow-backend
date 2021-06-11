@@ -55,7 +55,7 @@ const update = async (req, res) => {
     console.log(req.params.jid);
     const jid = req.params.jid
     try {
-        const updatedJournal = await Journal.findOneAndUpdate({_id: jid}, { name: req.body.name });
+        const updatedJournal = await Journal.findOneAndUpdate({_id: jid}, { name: req.body.name, entries: req.body.entries, location: req.body.location });
         console.log(updatedJournal); // { n: 1, nModified: 0, ok: 1 }
         res.redirect(`/api/journals/${jid}`);
     } catch (error) {
