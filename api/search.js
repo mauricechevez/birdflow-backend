@@ -39,7 +39,6 @@ const showStateBirds = async (req, res) => {
         const stateBirds = await State.findOne({ code: stateId });
         if (stateBirds){
             const birds = await Bird.find({speciesCode: {$in:stateBirds.birds}})
-            // console.log(birds)
             res.json({
                 birds
             })
@@ -53,7 +52,9 @@ const showStateBirds = async (req, res) => {
 }
 
 const showBirds = async (req,res) => {
-    bird = req.params.name
+    bird = req.params.name;
+
+    // Search for birds using like logic and case insensitive
     if(bird){
         try {
             let birds = await Bird.find({ comName: {$regex: bird, $options: 'i'} })
@@ -66,16 +67,23 @@ const showBirds = async (req,res) => {
     
 }
 
-const create = async (req, res) => {
-
-}
-
-const update = async (req, res) => {
-    
-}
-
-const deleteBook = async (req, res) => {
-    
+const showBirdsByState = async (req, res) => {
+    const bird = req.params.name
+    const stateId = req.params.state
+    try {
+        const stateBirds = await State.findOne({ code: stateId });
+        if (stateBirds){
+            const birds = await Bird.find({$and: [{speciesCode: {$in:stateBirds.birds}}, { comName: {$regex: bird, $options: 'i'} }]})
+            // console.log(birds)
+            res.json({
+                birds
+            })
+        }else {
+            res.json({message: 'NO STATE BIRDS'})
+        }
+    } catch (error) {
+        
+    }
 }
 
 
@@ -92,9 +100,9 @@ router.get('/states/:stateid', showStateBirds);
 
 // GET api/search/birds
 router.get('/birds/:name', showBirds);
-// router.get('/books/:id', show);
-// router.post('/books', passport.authenticate('jwt', { session: false }), create);
-// router.put('/books/:id', passport.authenticate('jwt', { session: false }), update);
-// router.delete('/books/:id', passport.authenticate('jwt', { session: false }), deleteBook);
+
+// GET api/search/birds/state
+router.get('/birds/:name/:state', showBirdsByState);
+
 
 module.exports = router;
