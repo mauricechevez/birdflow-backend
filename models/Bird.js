@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 const { Schema } = mongoose;
 
-// User Schema
+// Bird Schema
 const birdSchema = new Schema({
     sciName: String,
     comName: String,

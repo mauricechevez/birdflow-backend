@@ -1,48 +1,107 @@
-# MERN Authentication `Backend`
+#  Birdflow API
 
-This is a code along for MERN Auth
-
-Notes:
-1. Set up server
-2. Test home route
-3. Make api folder and test /test route
-2. Set up models
-3. Setup passport strategy
-4. Intialize passport and pass passport as arguemnt to config
-5. Make controllers for user
-6. Test each one after completing it.
-7. /test, /register, /login, /profile
-8. Make route for each controller
-9. Test other controllers in the box
-10. Make template, add models and routes
-
-## What it includes
-
-* Mongoose User schema and model
-* Settings for the database
-* Passport and passport-jwt for authentication
-* JSON Web Token
-* Passwords that are hashed with BCrypt
+Welcom to the Birdflow API. Used by the Birflow application to search and add birds to a user journal.
+## Models
 
 ### User Model
+```
+const userSchema = new Schema({
+    name: {
+        type: String,
+        required: true
+    },
+    email: {
+        type: String,
+        required: true,
+        unique: true
+    },
+    password: {
+        type: String,
+        required: true,
+        minlength: 8
+    },
+    timesLoggedIn: {
+        type: Number,
+        default: 0
+    },
+    date: {
+        type: Date,
+        default: Date.now()
+    }
+})
+```
 
-| Column Name | Data Type | Notes |
-| --------------- | ------------- | ------------------------------ |
-| id | Integer | Serial Primary Key, Auto-generated |
-| name | String | Must be provided |
-| email | String | Must be unique / used for login |
-| password | String | Stored as a hash |
-| timesLoggedIn | Number | used to track the amount of times a user logs in |
-| date | Date | Auto-generated |
-| __v | Number | Auto-generated |
+### Bird Model
+```
+const birdSchema = new Schema({
+    sciName: String,
+    comName: String,
+    speciesCode: {
+        type: String,
+        required: true,
+        unique: true
+    },
+    category: String,
+    taxonOrder: Number,
+    bandingCodes:[],
+    comNameCodes: [],
+    sciNameCodes: [],
+    order: String,
+    familyComName: String,
+    familySciName: String
+})
+```
 
-### Default Routes
+### State Model
+```
+const stateSchema = new Schema({
+    code: {
+        type: String,
+        required: true,
+        unique: true
+    },
+    name: {
+        type: String,
+        required: true
+    },
+    birds: [String]
+})
+```
 
-| Method | Path | Location | Purpose |
-| ------ | ---------------- | -------------- | ------------------- |
-| GET | / | app.js | Server file |
-| GET | /api/users/test | users.js | Return json data |
-| POST | /api/users/login | users.js | Login data |
-| POST | /api/users/signup | users.js | Signup data |
-| GET | /api/users/profile | users.js | Profile data |
-| GET | /api/users/all-users | users.js | Get all users |
+### Journal Model
+```
+const journalSchema = new mongoose.Schema({
+    name: String,
+    birds: [{type: mongoose.Schema.Types.ObjectId, ref: 'Bird'}],
+    entries: String,
+    location: String,
+    userId: String
+});
+```
+
+## Default Routes
+
+### users.js
+```
+GET /api/users/test  Test that the api is working
+POST /api/users/signup User signup route
+POST /api/users/login  User login route
+GET /api/users/profile (Private) User profile data
+```
+
+### search.js
+```
+GET api/search/states/ Show all states
+GET api/search/states/:id Show all birds for a state
+GET api/search/birds/:name Search for bird by name
+GET api/search/birds/:name/:state Search for bird by name and state
+```
+
+### journals.js
+```
+GET -> /api/journal (Private) Display all user journals
+GET -> /api/journals/:id (Private) Display a specific user journal
+POST -> /api/journals (Private) Add a new journal
+PUT -> /api/journals (Private) Update an existing journal
+DELETE -> /api/journals/:id (Private) Delete a journal
+```
