@@ -102,10 +102,10 @@ router.get('/states', showStates);
 // GET api/search/states/:id
 router.get('/states/:stateid', showStateBirds);
 
-// GET api/search/birds
+// GET api/search/birds/:name
 router.get('/birds/:name', showBirds);
 
-// GET api/search/birds/state
+// GET api/search/birds/:name/:state
 router.get('/birds/:name/:state', showBirdsByState);
 
 
