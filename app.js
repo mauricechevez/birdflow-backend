@@ -8,7 +8,6 @@ const PORT = process.env.PORT || 8000;
 
 // API
 const users = require('./api/users');
-const birds = require('./api/books');
 const journals = require('./api/journals');
 const search = require('./api/search');
 
@@ -29,7 +28,6 @@ app.get('/', (req, res) => {
 
 // Routes
 app.use('/api/users', users);
-app.use('/api/birds', birds);
 app.use('/api/journals', journals);
 app.use('/api/search', search);
 

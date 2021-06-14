@@ -5,22 +5,22 @@ const { Bird } = require('./models');
 
 // 1-----RUN FIRST
 // Seed all states for US
-const config1 = {
-  method: 'get',
-  url: 'https://api.ebird.org/v2/ref/region/list/subnational1/US',
-  headers: { 
-    'X-eBirdApiToken': process.env.BIRD_API_TOKEN
-  }
-};
-axios(config1)
-.then(function (response) {
-    console.log('---INSERTING STATES-----')
-    State.insertMany(response.data)
-    console.log('-----STATES UPDATED-----')
-})
-.catch(function (error) {
-  console.log(error);
-});
+// const config1 = {
+//   method: 'get',
+//   url: 'https://api.ebird.org/v2/ref/region/list/subnational1/US',
+//   headers: { 
+//     'X-eBirdApiToken': process.env.BIRD_API_TOKEN
+//   }
+// };
+// axios(config1)
+// .then(function (response) {
+//     console.log('---INSERTING STATES-----')
+//     State.insertMany(response.data)
+//     console.log('-----STATES UPDATED-----')
+// })
+// .catch(function (error) {
+//   console.log(error);
+// });
 
 //2-----RUN SECOND
 // Get all birds for a state
@@ -60,20 +60,20 @@ states()
 
 // 3---------Run Last
 // Get the taxonomy for a bird
-const config3 = {
-    method: 'get',
-    url: 'https://api.ebird.org/v2/ref/taxonomy/ebird?fmt=json',
-    headers: { 
-      'X-eBirdApiToken': process.env.BIRD_API_TOKEN
-    }
-  };
+// const config3 = {
+//     method: 'get',
+//     url: 'https://api.ebird.org/v2/ref/taxonomy/ebird?fmt=json',
+//     headers: { 
+//       'X-eBirdApiToken': process.env.BIRD_API_TOKEN
+//     }
+//   };
   
-  axios(config3)
-  .then(function (response) {
-        console.log('-----INSERTING BIRDS-----')
-        Bird.insertMany(response.data)
-        console.log('----BIRDS INSERTED');
-  })
-  .catch(function (error) {
-        console.log(error);
-  });
+//   axios(config3)
+//   .then(function (response) {
+//         console.log('-----INSERTING BIRDS-----')
+//         Bird.insertMany(response.data)
+//         console.log('----BIRDS INSERTED');
+//   })
+//   .catch(function (error) {
+//         console.log(error);
+//   });
