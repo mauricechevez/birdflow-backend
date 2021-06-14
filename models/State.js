@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 const { Schema } = mongoose;
 
-// User Schema
+// State Schema
 const stateSchema = new Schema({
     code: {
         type: String,
