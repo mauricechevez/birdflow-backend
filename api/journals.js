@@ -12,14 +12,11 @@ const { Journal } = require('../models');
 
 // Controllers
 const index = async (req, res) => {
-    console.log('inside of /api/journals');
     try {
         // Look for all journals owned by bird lover
         const allJournals = await Journal.find({userId: req.user.id});
         res.json({ journal: allJournals });
     } catch (error) {
-        console.log('Error inside of /api/journals');
-        console.log(error);
         return res.status(400).json({ message: 'Journal not found. Please try again.' });
     }
 }
@@ -27,15 +24,11 @@ const index = async (req, res) => {
 const show = async (req, res) => {
     const { id } = req.params;
     const userId = req.user.id
-    console.log('-----show me user id-----')
-    console.log(req.user.id)
     try {
         // look for journal based on journal id and user id
         const journal = await Journal.find({$and: [{_id: id}, {userId}]});
         res.json({ journal });
     } catch (error) {
-        console.log('Error inside of /api/journals/:id');
-        console.log(error);
         return res.status(400).json({ message: 'Journal not found. Try again...' });
     }
 }
@@ -47,11 +40,8 @@ const create = async (req, res) => {
     try {
         // Create Journal user input and also the user ID
         const newJournal = await Journal.create({ name, entries, location, userId });
-        console.log('new journal created', newJournal);
         res.json({ journal: newJournal });
     } catch (error) {
-       console.log('Error inside of POST of /api/journals');
-       console.log(error);
        return res.status(400).json({ message: 'Journal was not created. Please try again...' }); 
     }
 }
@@ -62,11 +52,8 @@ const update = async (req, res) => {
     const userId = req.user.id
     try {
         const updatedJournal = await Journal.findOneAndUpdate({$and:[{_id: id}, {userId}]}, { name: req.body.name, entries: req.body.entries, location: req.body.location });
-        console.log(updatedJournal); // { n: 1, nModified: 0, ok: 1 }
         res.redirect(`/api/journals/${id}`);
     } catch (error) {
-        console.log('Error inside of UPDATE route');
-        console.log(error);
         return res.status(400).json({ message: 'Bird could not be updated in the journal. Please try again...' });
     }
 }
@@ -76,12 +63,9 @@ const deleteJournal = async (req, res) => {
     const userId = req.user.id
     try {
         const result = await Journal.deleteOne({$and:[{_id: id}, {userId}]});
-        console.log(result);
         res.redirect('/api/journals');
 
     } catch (error){
-        console.log('inside of the DELETE route');
-        console.log(error)
         return res.status(400).json({ message: 'Journal was not deleted. Please try again...'});
     }
 }
