@@ -16,8 +16,6 @@ const test = async (req, res) => {
 }
 
 const signup = async (req, res) => {
-    console.log('--- INSIDE OF SIGNUP ---');
-    console.log('req.body =>', req.body);
     const { name, email, password } = req.body;
 
     try {
@@ -28,7 +26,6 @@ const signup = async (req, res) => {
         if (user) {
             return res.status(400).json({ message: 'Email already exists' });
         } else {
-            console.log('Create new user');
             let saltRounds = 12;
             let salt = await bcrypt.genSalt(saltRounds);
             let hash = await bcrypt.hash(password, salt);
@@ -45,8 +42,6 @@ const signup = async (req, res) => {
 
         }
     } catch (error) {
-        console.log('Error inside of /api/users/signup');
-        console.log(error);
         return res.status(400).json({ message: 'Error occurred. Please try again...'});
     }
 }
@@ -56,13 +51,11 @@ const login = async (req,res) => {
 
     try {
         const user = await User.findOne({ email });
-        console.log(user);
 
         if(!user){
             return res.status(400).json({ message: 'Email or password is incorrect.' })
         } else {
             const isMatch = await bcrypt.compare(password, user.password);
-            console.log('password correct', isMatch);
 
             if (isMatch) {
                 const logs = user.timesLoggedIn + 1;
@@ -77,7 +70,6 @@ const login = async (req,res) => {
 
                 try {
                     const token = await jwt.sign(payload, JWT_SECRET, { expiresIn: 3600})
-                    console.log('token', token)
                     const legit = await jwt.verify(token, JWT_SECRET, { expiresIn: 60 })
 
                     res.json({
@@ -87,8 +79,6 @@ const login = async (req,res) => {
                     })
 
                 } catch (error) {
-                    console.log('Error inside of isMatch conditional');
-                    console.log(error);
                     return res.status(400).json({ message: 'Session has ended. Please log in again.'})
                 }
             } else {
@@ -96,14 +86,11 @@ const login = async (req,res) => {
             }
         }
     } catch (error) {
-        console.log('Error inside of /api/users/login');
-        console.log(error)
         return res.status(400).json({ message: 'Either email or password in incorrect. Please try again.' })
     }
 }
 
 const profile = async (req, res) => {
-    console.log('Inside of profile route.');
     res.json({
         id: req.user.id,
         name: req.user.name,
