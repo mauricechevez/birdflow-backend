@@ -5,58 +5,58 @@ const { Bird } = require('./models');
 
 // 1-----RUN FIRST
 // Seed all states for US
-const config1 = {
-  method: 'get',
-  url: 'https://api.ebird.org/v2/ref/region/list/subnational1/US',
-  headers: { 
-    'X-eBirdApiToken': process.env.BIRD_API_TOKEN
-  }
-};
-axios(config1)
-.then(function (response) {
-    console.log('---INSERTING STATES-----')
-    State.insertMany(response.data)
-    console.log('-----STATES UPDATED-----')
-})
-.catch(function (error) {
-  console.log(error);
-});
+// const config1 = {
+//   method: 'get',
+//   url: 'https://api.ebird.org/v2/ref/region/list/subnational1/US',
+//   headers: { 
+//     'X-eBirdApiToken': process.env.BIRD_API_TOKEN
+//   }
+// };
+// axios(config1)
+// .then(function (response) {
+//     console.log('---INSERTING STATES-----')
+//     State.insertMany(response.data)
+//     console.log('-----STATES UPDATED-----')
+// })
+// .catch(function (error) {
+//   console.log(error);
+// });
 
 //2-----RUN SECOND
 // Get all birds for a state
-const birdForState = async (code) => {const config2 = {
-    method: 'get',
-    url: `https://api.ebird.org/v2/product/spplist/${code}`,
-    headers: { 
-      'X-eBirdApiToken': process.env.BIRD_API_TOKEN
-    }
-  };
-  axios(config2)
-  .then(function (response) {
-      console.log(`----Updating Birds for ${code}`)
-      State.updateOne({code: code}, {$addToSet: {birds:response.data}}, (err, res)=>{
-            if(err){
-                  console.log(err)
-            }else{
-                  console.log(res)
-            }
-      })
-      console.log('-----Birds Updated-----')
-  })
-  .catch(function (error) {
-    console.log(error);
-  });
-}
+// const birdForState = async (code) => {const config2 = {
+//     method: 'get',
+//     url: `https://api.ebird.org/v2/product/spplist/${code}`,
+//     headers: { 
+//       'X-eBirdApiToken': process.env.BIRD_API_TOKEN
+//     }
+//   };
+//   axios(config2)
+//   .then(function (response) {
+//       console.log(`----Updating Birds for ${code}`)
+//       State.updateOne({code: code}, {$addToSet: {birds:response.data}}, (err, res)=>{
+//             if(err){
+//                   console.log(err)
+//             }else{
+//                   console.log(res)
+//             }
+//       })
+//       console.log('-----Birds Updated-----')
+//   })
+//   .catch(function (error) {
+//     console.log(error);
+//   });
+// }
 
 // Select all states from State model and update with birds
-const states = async () => {
-  console.log('--- INSIDE OF STATE ---');
-  const states = await State.find({});
-  states.forEach((state) => {
-      birdForState(state.code)
-  })
-}
-states()
+// const states = async () => {
+//   console.log('--- INSIDE OF STATE ---');
+//   const states = await State.find({});
+//   states.forEach((state) => {
+//       birdForState(state.code)
+//   })
+// }
+// states()
 
 // 3---------Run Last
 // Get the taxonomy for a bird
