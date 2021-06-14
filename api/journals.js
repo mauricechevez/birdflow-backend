@@ -15,7 +15,9 @@ const index = async (req, res) => {
     console.log('inside of /api/journals');
     try {
         // Look for all journals owned by bird lover
+        console.log(req.user.id)
         const allJournals = await Journal.find({userId: req.user.id});
+        // const allJournals = await Journal.find({})
         res.json({ journal: allJournals });
     } catch (error) {
         console.log('Error inside of /api/journals');
@@ -92,8 +94,8 @@ router.get('/test', (req, res) => {
     res.json({ msg: 'Birds endpoint OK!'});
 });
 
-// GET -> /api/journal
-router.get('/', passport.authenticate('jwt', { session: false }), index); 
+// GET -> /api/journals
+router.get('/', passport.authenticate('jwt', { session: false }), index);
 // GET -> /api/journals/:id
 router.get('/:id', passport.authenticate('jwt', { session: false }), show);
 // POST -> /api/journals

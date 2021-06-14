@@ -3,7 +3,7 @@ const { Journal } = require('./models')
 
 Journal.create([
     {
-        name: 'Chris',
+        name: 'Maurice Chevez',
         birds: [],
         entries: 'Hello, these are my birds',
         location: 'Washington DC',
